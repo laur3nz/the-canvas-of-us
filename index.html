@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Archive of Her</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@500;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Playfair Display', serif;
+      background-color: #fce4ec;
+    }
+
+    /* --- EXTERIOR SCREEN --- */
+    #exterior-view {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, #87ceeb 0%, #e0f7fa 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      z-index: 10;
+      transition: opacity 1s ease-in-out;
+    }
+
+    /* Clouds Effect */
+    .cloud {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50px;
+      opacity: 0.85;
+      animation: float 25s linear infinite;
+    }
+    .cloud::before, .cloud::after {
+      content: '';
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+    }
+    .cloud-1 { width: 140px; height: 50px; top: 10%; left: -150px; }
+    .cloud-1::before { width: 60px; height: 60px; top: -25px; left: 20px; }
+    .cloud-1::after { width: 45px; height: 45px; top: -15px; left: 65px; }
+
+    .cloud-2 { width: 180px; height: 60px; top: 22%; left: -200px; animation-delay: 10s; }
+    .cloud-2::before { width: 80px; height: 80px; top: -35px; left: 30px; }
+    .cloud-2::after { width: 60px; height: 60px; top: -20px; left: 90px; }
+
+    @keyframes float {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 250px)); }
+    }
+
+    /* Boutique Facade Architecture */
+    .boutique-facade {
+      position: relative;
+      width: min(850px, 95vw);
+      height: 70vh;
+      background-color: #fce4ec;
+      border: 3px solid #3a3a3a;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cornice-top {
+      width: 104%;
+      height: 35px;
+      background: #f48fb1;
+      border: 3px solid #3a3a3a;
+      box-shadow: inset 0 -4px 0 #ad1457;
+      margin-top: -15px;
+    }
+
+    .sign-header {
+      width: 85%;
+      height: 60px;
+      margin-top: 15px;
+      background: #f8bbd0;
+      border: 2px solid #3a3a3a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sign-header h1 {
+      font-family: 'Cinzel', serif;
+      color: #2c2c2c;
+      font-size: clamp(1.2rem, 2.5vw, 2.2rem);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .storefront-body {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      padding: 20px 25px 0 25px;
+      gap: 15px;
+      position: relative;
+    }
+
+    .display-window {
+      flex: 1;
+      height: 88%;
+      border: 3px solid #3a3a3a;
+      background: rgba(255, 255, 255, 0.4);
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .center-entrance {
+      width: 170px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .transom-window {
+      width: 100%;
+      height: 45px;
+      border: 3px solid #3a3a3a;
+      margin-bottom: 5px;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .door-frame {
+      width: 100%;
+      flex: 1;
+      background-color: #fce4ec;
+      border: 3px solid #3a3a3a;
+      border-bottom: none;
+      display: flex;
+      perspective: 1000px;
+      cursor: pointer;
+      position: relative;
+      z-index: 3;
+    }
+    .door {
+      width: 50%;
+      height: 100%;
+      background-color: #f8bbd0;
+      border: 2px solid #3a3a3a;
+      transition: transform 1.5s ease-in-out;
+      transform-origin: left;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6px;
+    }
+    .door.right {
+      transform-origin: right;
+      justify-content: flex-start;
+      padding-right: 0;
+      padding-left: 6px;
+    }
+    .door-knob {
+      width: 10px;
+      height: 24px;
+      background-color: #3a3a3a;
+      border-radius: 3px;
+    }
+
+    /* Animated Door Opening */
+    .door-frame.open .door.left { transform: rotateY(-110deg); }
+    .door-frame.open .door.right { transform: rotateY(110deg); }
+
+    .enter-btn {
+      position: absolute;
+      bottom: -55px;
+      background-color: #ffffff;
+      border: 2px solid #3a3a3a;
+      color: #3a3a3a;
+      padding: 8px 22px;
+      font-family: 'Cinzel', serif;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+    .enter-btn:hover {
+      background-color: #3a3a3a;
+      color: #ffffff;
+    }
+
+    /* --- INTERIOR GALLERY SCREEN --- */
+    #gallery-view {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #f8bbd0;
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0 10vw;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease-in-out;
+    }
+    #gallery-view.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #gallery-view::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 20000px;
+      height: 18vh;
+      background: #5d4037;
+      border-top: 10px solid #3e2723;
+    }
+
+    .gallery-container {
+      display: flex;
+      gap: 100px;
+      align-items: center;
+      z-index: 2;
+      padding-bottom: 8vh;
+    }
+
+    /* Painting Wrapper & Frame Styling */
+    .artwork-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .artwork-item:hover {
+      transform: scale(1.04);
+    }
+
+    .artwork-item img {
+      max-height: 36vh;
+      max-width: 280px;
+      display: block;
+      object-fit: contain;
+      mix-blend-mode: darken;
+      filter: drop-shadow(0px 15px 12px rgba(0, 0, 0, 0.45));
+    }
+
+    /* Gold Plaque Below Painting */
+    .gold-plaque {
+      margin-top: 18px;
+      background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728);
+      border: 1px solid #5c4308;
+      padding: 8px 18px;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      border-radius: 2px;
+      min-width: 180px;
+    }
+    .gold-plaque .title {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      color: #3e2723;
+      font-size: 0.85rem;
+    }
+    .gold-plaque .date {
+      font-size: 0.75rem;
+      color: #4e342e;
+      margin-top: 2px;
+    }
+
+    /* --- DETAIL POPUP MODAL --- */
+    #artwork-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    #artwork-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background-color: #fff0f5;
+      width: min(850px, 90vw);
+      max-height: 85vh;
+      display: flex;
+      gap: 30px;
+      padding: 30px;
+      border-radius: 8px;
+      border: 3px solid #880e4f;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      overflow-y: auto;
+      transform: scale(0.9);
+      transition: transform 0.4s ease;
+    }
+    #artwork-modal.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-img-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-img-container img {
+      max-width: 100%;
+      max-height: 60vh;
+      mix-blend-mode: darken;
+      filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.3));
+    }
+
+    .modal-text-container {
+      flex: 1.2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #4a148c;
+    }
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      color: #880e4f;
+      margin-bottom: 5px;
+    }
+    .modal-date {
+      font-style: italic;
+      color: #ad1457;
+      margin-bottom: 15px;
+    }
+    .modal-message {
+      line-height: 1.7;
+      font-size: 1.05rem;
+      color: #2c001e;
+      white-space: pre-line;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 2rem;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    /* --- CONTROLS --- */
+    .audio-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ffffff;
+      border: 2px solid #880e4f;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 200;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="bg-music" loop>
+    <source src="bg-music.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="audio-control" id="audio-toggle" title="Toggle Sound">🎵</button>
+
+  <div id="exterior-view">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+
+    <div class="boutique-facade">
+      <div class="cornice-top"></div>
+      <div class="sign-header">
+        <h1>THE ARCHIVE OF HER</h1>
+      </div>
+      <div class="storefront-body">
+        <div class="display-window"></div>
+        <div class="center-entrance">
+          <div class="transom-window"></div>
+          <div class="door-frame" id="museum-door">
+            <div class="door left"><div class="door-knob"></div></div>
+            <div class="door right"><div class="door-knob"></div></div>
+          </div>
+        </div>
+        <div class="display-window"></div>
+      </div>
+      <button class="enter-btn" id="enter-btn">ENTER THE GALLERY</button>
+    </div>
+  </div>
+
+  <div id="gallery-view">
+    <div class="gallery-container" id="gallery-container">
+      </div>
+  </div>
+
+  <div id="artwork-modal">
+    <span class="close-btn" id="close-modal">&times;</span>
+    <div class="modal-content">
+      <div class="modal-img-container">
+        <img id="modal-img" src="" alt="Detail Artwork">
+      </div>
+      <div class="modal-text-container">
+        <h2 class="modal-title" id="modal-title"></h2>
+        <p class="modal-date" id="modal-date"></p>
+        <p class="modal-message" id="modal-message"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* --- 8 PAINTINGS DATA CONFIGURATION --- */
+    const artworks = [
+      {
+        image: "art1.jpg",
+        title: "The Immortal Hello",
+        date: "Feb 7, 2026",
+        message: "a story of timing, subtle connections, and the quiet shift when two lives begin to intertwine.\n\nsome beginnings don't start with grand declarations. they arrive gently—through a thoughtful suggestion, a mutual friend bridging two worlds, and a simple text message sent across the quiet space of a screen.\n\nconnections have a way of unfolding like that. they hide inside everyday conversations, shared laughs, and the unexpected ease of talking to someone who suddenly feels entirely familiar.\n\nthere are moments that mark the exact line between before and after. sending that first message brought a wave of nervous anticipation, a quiet pause while waiting to see how she would reply. then, as her first words appeared, the tension dissolved into an effortless warmth—each message bubble drawing him a little closer, each reply building a space built just for two.\n\nwhen a shared connection brought her into his life, neither of them could have predicted how quickly a stranger’s name would become the favorite part of his day. looking back, that very first conversation wasn't just small talk. it was the moment two paths quietly aligned.\n\nthere is something timeless about capturing the exact moment two people found each other. because sometimes, the most beautiful love story isn't the one that takes years to figure out—it is the one that simply starts with a single message, a shared smile, and choosing to stay in each other's lives."
+      },
+      {
+        image: "art2.jpg",
+        title: "The Idol of a Thousand Beholds",
+        date: "2026",
+        message: "a story of quiet wonder, instant affection, and the moment a single image captured his heart.\n\nthere is a distinct shift that happens when a voice on a screen finally gets a face. even without having met in person yet, there was that one photograph—the very first one she ever sent him. it was simple, yet from the exact second he opened it, everything changed.\n\nhe was instantly smitten. looking at her for the first time, a quiet wave of admiration washed over him, making it impossible not to fall a little bit in love right then and there.\n\nwords in a chat box had already built warmth, but seeing her turned that affection into pure adoration. it wasn't just a picture; it was the moment she captured his heart. he found himself mesmerized by every expression, taking in her playful winks, her shy smiles, and the soft charm she carried without even trying.\n\nthat single image lit up his screen and immediately became his absolute favorite. it made the distance between them feel small, holding the unmistakable feeling of falling for someone from afar and turning a quiet evening into a memory he would revisit again and again.\n\nbecause sometimes, the most cherished moment isn't meeting in the real world just yet, but the simple joy of opening a photo, taking her in, and realizing he was already hers."
+      },
+      {
+        image: "art3.jpg",
+        title: "Before the Stars Knew Her Name",
+        date: "2026",
+        message: "a story of quiet nostalgia, protective warmth, and loving the person she was long before he knew her.\n\nit feels like stepping backward into a past he didn't get to share. long before their paths crossed, long before the late-night messages, there was a quiet little girl living out her own ordinary days, oblivious to the future.\n\nthe moment that childhood photo appeared on his screen, a whole different feeling took over. it wasn't the sudden rush of adoration he felt seeing her grown-up smile—it was a soft, protective warmth. a deep, tender fondness for the person she used to be.\n\nholding that image in his eyes made him wish he could travel back in time just to look out for her. at the same time, it brought a quiet sense of wonder, tracing the line from that shy little girl to the wonderful person who now holds his entire heart.\n\nshe wasn't just sharing a piece of nostalgia; she was trusting him with her history. and in that moment, he realized loving her meant loving every chapter of her life—including the little girl who had no idea that someone miles away would one day look at her past and treasure it just as much."
+      },
+      {
+        image: "art4.jpg",
+        title: "The Silent Center of a Loud World",
+        date: "2026",
+        message: "a story of quiet presence, undeniable focus, and how she glows above everything else.\n\nthe world is always full of noise. people moving back and forth, conversations blurring into the background, and life happening all around in a sea of shadows.\n\nyet, whenever he thinks of her, the chaos just fades away. it doesn't matter how many faces surround them or how busy the room gets—his eyes naturally trace their way back to her. she stands out effortlessly, wrapped in a soft, gentle light that turns everything else into blurred silhouettes.\n\nit isn't about grand gestures or making a scene. it is the simple, honest reality of how he sees her: the one bright spot in a crowded room, the person who grounds his attention without even trying. while everyone else moves like passing shadows, she remains clear, warm, and impossible to miss.\n\nbecause to him, no matter where they are or how many people stand between them, she will always be the only face in the crowd that truly matters."
+      },
+      {
+        image: "art5.jpg",
+        title: "The Softest Tie That Holds the World",
+        date: "2026",
+        message: "a story of simple joy, shared sweetness, and finding happiness in the smallest moments together.\n\nsometimes, the best moments are the ones that make no sense to anyone else. it’s those silly, lighthearted instances where two people just fall into their own little world, leaving all the seriousness behind.\n\nwatching her play along, striking those adorable poses with that playful glint in her eyes, makes his heart swell. he finds her endearingly cute in those quiet seconds—the way she embraces the sweetness without hesitation, making the simplest things feel bright and special.\n\nbeing right there with her, matching her energy and sharing that quiet connection, brings a warmth that is hard to put into words. it isn't about doing anything grand; it’s the pure, genuine comfort of making each other laugh and sharing a spark that belongs only to the two of them.\n\nto him, happiness lives in these small, shared smiles. it’s knowing that no matter what, being silly alongside her is the easiest, most rewarding feeling in the world."
+      },
+      {
+        image: "art6.jpg",
+        title: "Through Digital Forests, Hand in Hand",
+        date: "2026",
+        message: "a story of late-night adventures, shared laughter, and finding home in a virtual world.\n\nit doesn't really matter what they're doing or where the game takes them. whether it's navigating dark paths, carrying heavy items, or just wandering aimlessly under pixelated stars, the activity itself is secondary. the true highlight is simply doing it alongside her.\n\nshe holds out a lantern to guide the way, bringing her usual lighthearted charm into the game, while a steady presence follows right beside her. there is pure joy in how fun even the simplest moments become when she's involved. the game is just a backdrop for her laughter, her reactions, and the effortless way she turns a late-night session into something to look forward to all day.\n\nevery shared round, every silly mistake, and every victory feels special for one reason alone. it isn't about winning or making progress on a screen; it's about the genuine comfort of sharing the time with her.\n\nany world—virtual or real—becomes an absolute favorite place to be, simply because she's there sharing it."
+      },
+      {
+        image: "art7.jpg",
+        title: "Where Only Our Gazes Belong",
+        date: "2026",
+        message: "a story of quiet gaze, shared trends, and the one pair of eyes that holds all the beauty.\n\nit started as just a silly trend to try together, but taking a closer look at the picture changes everything. with fabric covering almost their entire faces, all the noise strips away, leaving nothing behind except two pairs of eyes.\n\nand yet, his gaze immediately locks onto hers. there is an intoxicating warmth in her eyes—wide, deep, and so breathtakingly expressive that he finds himself utterly captivated every single time he looks. he is completely, hopelessly in love with those eyes. among all the eyes in the world, hers hold a magic that leaves him speechlessly head over heels.\n\nfocusing on that photograph, it feels like drowning in the quiet beauty of her expression. those dark, glowing eyes carry a soft magnetism that pulls his entire heart right toward her, reminding him of just how deeply she holds him in her spell.\n\njoining in on a trend was just an excuse to make a memory, but the picture captures an undeniable truth. he could search forever, but he will never find anything more captivating than staring into the eyes of the girl he adores."
+      },
+      {
+        image: "art8.jpg",
+        title: "Where Tomorrow Opens Its Wings",
+        date: "forever",
+        message: "a story of quiet devotion, choosing the same path, and stepping into forever hand in hand.\n\nlooking out toward that golden horizon, one thing becomes effortlessly clear—that path ahead isn't just a scenic view, it’s a promise. holding her hand tightly as the sun sets over the crowd, his heart is completely set on one destination: a future shared with her.\n\nwalking beside her makes every unknown step feel safe. surrounded by shifting shadows and passing faces, he doesn't care where the rest of the world is heading, because his own direction is already chosen. every squeeze of her hand carries a silent message, an unspoken pledge that he wants to navigate every single chapter, every milestone, and every sunrise right by her side.\n\nshe makes the future look warm, bright, and endlessly inviting. stepping forward into tomorrow isn't daunting when her hand is in his; instead, it feels like coming home.\n\nno matter how long the road is or what lies beyond that glowing horizon, he knows with absolute certainty that as long as they are walking towards the future together, he is already right where he belongs."
+      }
+    ];
+
+    /* --- INTERACTION LOGIC --- */
+    const audio = document.getElementById('bg-music');
+    const audioToggle = document.getElementById('audio-toggle');
+    const museumDoor = document.getElementById('museum-door');
+    const enterBtn = document.getElementById('enter-btn');
+    const exteriorView = document.getElementById('exterior-view');
+    const galleryView = document.getElementById('gallery-view');
+    const galleryContainer = document.getElementById('gallery-container');
+    const modal = document.getElementById('artwork-modal');
+    const closeModal = document.getElementById('close-modal');
+
+    // Audio Control
+    let isPlaying = false;
+    function startMusic() {
+      if (!isPlaying) {
+        audio.play().then(() => {
+          isPlaying = true;
+        }).catch(() => {});
+      }
+    }
+
+    audioToggle.addEventListener('click', () => {
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+      } else {
+        audio.play();
+        isPlaying = true;
+      }
+    });
+
+    // Door Transition
+    function enterGallery() {
+      startMusic();
+      museumDoor.classList.add('open');
+      
+      setTimeout(() => {
+        exteriorView.style.opacity = '0';
+        galleryView.classList.add('active');
+        setTimeout(() => {
+          exteriorView.style.display = 'none';
+        }, 1000);
+      }, 1200);
+    }
+
+    museumDoor.addEventListener('click', enterGallery);
+    enterBtn.addEventListener('click', enterGallery);
+
+    // Populate Gallery Artworks
+    artworks.forEach((art) => {
+      const artItem = document.createElement('div');
+      artItem.classList.add('artwork-item');
+      artItem.innerHTML = `
+        <img src="${art.image}" alt="${art.title}">
+        <div class="gold-plaque">
+          <div class="title">${art.title}</div>
+          <div class="date">${art.date}</div>
+        </div>
+      `;
+
+      artItem.addEventListener('click', () => {
+        document.getElementById('modal-img').src = art.image;
+        document.getElementById('modal-title').textContent = art.title;
+        document.getElementById('modal-date').textContent = art.date;
+        document.getElementById('modal-message').textContent = art.message;
+        modal.classList.add('active');
+      });
+
+      galleryContainer.appendChild(artItem);
+    });
+
+    // Close Detail Modal
+    closeModal.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
