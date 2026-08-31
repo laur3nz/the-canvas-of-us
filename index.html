@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Archive of Her</title>
@@ -314,9 +312,9 @@
       border-radius: 8px;
       border: 3px solid #880e4f;
       box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-      overflow-y: auto;
       transform: scale(0.9);
       transition: transform 0.4s ease;
+      align-items: flex-start;
     }
     #artwork-modal.active .modal-content {
       transform: scale(1);
@@ -327,6 +325,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: sticky;
+      top: 0;
     }
     .modal-img-container img {
       max-width: 100%;
@@ -339,8 +339,11 @@
       flex: 1.2;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       color: #4a148c;
+      max-height: calc(85vh - 60px);
+      overflow-y: auto;
+      padding-right: 10px;
     }
     .modal-title {
       font-family: 'Cinzel', serif;
@@ -382,9 +385,7 @@
       z-index: 200;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
-  </style>
-</head>
-<body>
+  </style></head><body>
 
   <audio id="bg-music" loop>
     <source src="bg-music.mp3" type="audio/mpeg">
@@ -569,6 +570,4 @@
         modal.classList.remove('active');
       }
     });
-  </script>
-</body>
-</html>
+  </script></body></html>
